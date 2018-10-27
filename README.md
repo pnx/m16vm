@@ -33,7 +33,7 @@ There are 16 different instructions.
 | 0101   | sw   | R    | store word                              |
 | 0110   | beq  | RI   | Branch on equal                         |
 | 0111   | jmp  | J    | Jump                                    |
-| 1000   | jr   | J    | Jump (register)                         |
+| 1000   | jr   | I    | Jump (register)                         |
 | 1001   | -    | -    | Reserved                                |
 | 1010   | -    | -    | Reserved                                |
 | 1011   | -    | -    | Reserved                                |
