@@ -4,7 +4,9 @@
 This is a virtual machine for a RISC-processor designed for educational purposes.
 
 The design is taken from the real world and tries to mimic existing RISC-architectures.
-So it should in theory be possible to construct actual hardware based on the instruction set. Maybe not build a transistor-chip (it's hard, unless you know someone working at Intel/Amd or something) but by putting together a bunch of gate-chips on a breadboard.
+So it should in theory be possible to construct actual hardware based on the instruction set.
+Maybe not build a transistor-chip (it's hard, unless you know someone working at Intel/Amd or something)
+but by putting together a bunch of gate-chips on a breadboard.
 
 The instruction set is by no means designed to be "fast" or "optimal" but focus
 more on being easy to understand and modify/play with.
