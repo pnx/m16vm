@@ -14,7 +14,7 @@ more on being easy to understand and modify/play with.
 The cpu has 16 general purpose registers, r0 - r15. Each register is 16-bit.
 
 Memory addresses are aligned by 2 bytes (16 bit) and the machine has
-a total of `4096` bytes of memory.
+a total of `65536` bytes of memory (per default, can be changed at compile time).
 
 
 ## instruction set overview
