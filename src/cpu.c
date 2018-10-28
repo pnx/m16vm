@@ -110,6 +110,18 @@ void print_memory() {
 	printf("\n");
 }
 
+void print_reg() {
+
+	int i = 0;
+
+	printf("\n");
+
+	for(i = 0; i < 16; i++) {
+		printf("r%i = %i\n", i, reg[i]);
+	}
+	printf("\n");
+}
+
 static unsigned char* instr_fetch() {
 
 	if (pc + 1 >= instr_cnt >> 1)
@@ -163,6 +175,7 @@ void cpu_run() {
 		execute(&instr);
 	}
 
+	print_reg();
 	print_memory();
 
 	mm_exit();
