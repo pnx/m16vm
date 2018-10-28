@@ -25,7 +25,10 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include "mm.h"
 #include "cpu.h"
+
+struct cpu_state state;
 
 // Load program from file
 unsigned long load_program(int fd, unsigned char **buf) {
@@ -46,8 +49,53 @@ unsigned long load_program(int fd, unsigned char **buf) {
 	return rc;
 }
 
+void print_memory() {
+
+	int i = 0;
+
+	printf("\n");
+
+	for(i = 0; i < 32; i++) {
+		printf("%.2X ", memory[i]);
+	}
+	printf("\n");
+}
+
+void print_regs(uint16_t *regs) {
+
+	int i = 0;
+
+	printf("\n");
+
+	for(i = 0; i < CPU_NUM_REGS; i++) {
+		printf("r%i = %i\n", i, regs[i]);
+	}
+	printf("\n");
+}
+
+void run(unsigned char *instr_ptr, unsigned instr_len) {
+
+	int rc;
+
+	mm_init();
+	cpu_init(&state);
+
+	cpu_instr_load(&state, instr_ptr, instr_len);
+
+	do {
+		rc = cpu_tick(&state);
+	} while(rc == 0);
+
+	print_regs(state.reg);
+
+	print_memory();
+
+	mm_exit();
+}
+
 int main(int argc, char **argv) {
 
+	int rc;
 	int fd;
 	unsigned char *instr_ptr;
 	unsigned instr_len;
@@ -70,9 +118,8 @@ int main(int argc, char **argv) {
 	if (instr_len < 0)
 		return 1;
 
-	cpu_instr_load(instr_ptr, instr_len);
-
-	cpu_run();
+	// Execute the program.
+	run(instr_ptr, instr_len);
 
 	if (instr_ptr)
 		free(instr_ptr);

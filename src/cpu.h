@@ -25,12 +25,31 @@
 
 #define CPU_NUM_REGS 16
 
-int cpu_instr_load(void *ptr, unsigned len);
+#define CPU_FLAGS_HALT (1<<0)
 
-void cpu_instr_unload();
+struct cpu_state {
+	// Registers r0, r15
+	int16_t reg[CPU_NUM_REGS];
 
-void cpu_set_pc(uint16_t addr);
+	// Program counter
+	uint16_t pc;
 
-void cpu_run();
+	// flags
+	unsigned char flags;
+
+	// Instruction
+	unsigned char *instr_mem;
+	unsigned long instr_cnt;
+};
+
+void cpu_init(struct cpu_state *state);
+
+int cpu_instr_load(struct cpu_state *state, void *ptr, unsigned len);
+
+void cpu_instr_unload(struct cpu_state *state);
+
+void cpu_set_pc(struct cpu_state *state, uint16_t addr);
+
+int cpu_tick(struct cpu_state *state);
 
 #endif /* CPU_H */
