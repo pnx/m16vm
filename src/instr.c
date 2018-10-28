@@ -40,7 +40,7 @@ void instr_decode(unsigned char *instr, struct instr *out) {
 		out->r.rs = *instr & 0xF;
 
 		// I-Type
-		if (out->opcode == OP_MOVL || out->opcode == OP_MOVH || out->opcode == OP_SYSC_WR) {
+		if (out->opcode == OP_MOVL || out->opcode == OP_MOVH || out->opcode == OP_INT) {
 			out->i.imm = *(instr + 1);
 		}
 		// R/RI-Type

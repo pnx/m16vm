@@ -32,10 +32,7 @@
 #define OP_BEQ  	6
 #define OP_JMP  	7
 #define OP_JR   	8
-
-/* System calls */
-#define OP_SYSC_RD	14 /* read char from stdin */
-#define OP_SYSC_WR 	15 /* write char to stdout */
+#define OP_INT 		15
 
 /* Register type */
 struct instr_R {
