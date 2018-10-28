@@ -40,7 +40,7 @@ There are 16 different instructions.
 | 1100   | -    | -    | Reserved                                |
 | 1101   | -    | -    | Reserved                                |
 | 1110   | -    | -    | Reserved                                |
-| 1111   | wr   | I    | I/O Write                               |
+| 1111   | int  | I    | Interrupt                               |
 
 NOTE: Subtraction can be implemented via `add` and negative register values, so no
 special opcode is needed.
@@ -72,6 +72,28 @@ Constant operation format (I):
 Jump format (J):
 
 	opcode (4) | addr (signed 12)
+
+## Interrupts
+
+There can be a total of `16` Interrupts and the instruction uses the `I-format`.
+
+The interrupt number is stored in `reg` (note that for interrupts this is a constant and not a register).
+
+The `data` field can be used as an argument to the interrupt.
+
+| Number     | Name       | data   | Description                                              |
+| ---------: | -----------| ------ | -------------------------------------------------------- |
+| 10    | I/O Write  | format | Outputs a value to the screen, value are stored in `r15` |
+
+### I/O Write - int 10
+
+The formatting of the output can be controlled by the number in `data` as follows:
+
+| Argument     | Datatype                |
+| ------------ | ----------------------- |
+| 0            | Integer (16 bit signed) |
+| 1            | Integer (8 bit signed)  |
+| 2            | Character               |
 
 ## Example programs.
 
