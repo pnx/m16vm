@@ -88,9 +88,9 @@ static void execute(struct instr *instr) {
 		if (reg[instr->ri.rs] == reg[instr->ri.r0])
 			cpu_set_pc(pc + instr->ri.offset);
 		break;
-	case OP_SYSC_WR :
-		debug("I/O write r%i: %i\n", instr->r.rs, reg[instr->r.rs]);
-		syscall_write(reg[instr->i.rs], instr->i.imm);
+	case OP_INT :
+		debug("int %i(#%i)\n", instr->r.rs, instr->i.imm);
+		vm_syscall(instr->i.rs, instr->i.imm, reg);
 		break;
 	default :
 		fprintf(stderr, "Invalid instruction (%.2X)\n", instr->opcode);
