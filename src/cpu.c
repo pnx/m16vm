@@ -79,7 +79,8 @@ static void execute(struct instr *instr) {
 		cpu_set_pc(instr->j.addr);
 		break;
 	case OP_JR :
-		debug("jr\t#r%i(#%i)\n", instr->i.rs, instr->i.imm);
+		debug("jr\tr%i(#%i)\n", instr->i.rs, instr->i.imm);
+		cpu_set_pc(reg[instr->r.rs] + instr->i.imm);
 		break;
 	case OP_BEQ :
 		debug("beq\tr%i r%i #%i\n", instr->ri.rs, instr->ri.r0, instr->ri.offset);
