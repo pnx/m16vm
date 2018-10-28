@@ -23,6 +23,8 @@
 #include <stdint.h>
 #include "instr.h"
 
+#define CPU_NUM_REGS 16
+
 int cpu_instr_load(void *ptr, unsigned len);
 
 void cpu_instr_unload();

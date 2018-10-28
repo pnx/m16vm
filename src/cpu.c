@@ -32,7 +32,7 @@
 #include "instr.h"
 
 // Registers r0, r15
-int16_t reg[16] = { 0 };
+int16_t reg[CPU_NUM_REGS] = { 0 };
 
 /* Program */
 unsigned char *instr_mem = NULL;
