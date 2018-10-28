@@ -20,7 +20,14 @@
 #include <stdio.h>
 #include "syscall.h"
 
-void syscall_write(int16_t value, int8_t op) {
+void vm_syscall(int16_t number, int8_t op, uint16_t* regs) {
+
+	if (number == SYS_WRITE) {
+		vm_syscall_write(op, regs[15]);
+	}
+}
+
+void vm_syscall_write(int8_t op, int16_t value) {
 
 	switch(op) {
 	case SYSW_INT16 :

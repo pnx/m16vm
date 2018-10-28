@@ -23,10 +23,14 @@
 
 #include <stdint.h>
 
+#define SYS_WRITE 	10
+
 #define SYSW_INT16  0x0
 #define SYSW_INT8   0x1
 #define SYSW_CHAR   0x2
 
-void syscall_write(int16_t value, int8_t op);
+void vm_syscall(int16_t number, int8_t op, uint16_t* regs);
+
+void vm_syscall_write(int8_t op, int16_t value);
 
 #endif /* SYSCALL_H */
