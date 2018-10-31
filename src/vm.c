@@ -17,37 +17,10 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
+#include "program.h"
 #include "mm.h"
 #include "cpu.h"
-
-struct cpu_state state;
-
-// Load program from file
-unsigned long load_program(int fd, unsigned char **buf) {
-
-	struct stat st;
-	ssize_t rc;
-
-	if (fstat(fd, &st) < 0)
-		return -1;
-
-	*buf = malloc(st.st_size);
-	if (*buf == NULL)
-		return -1;
-
-	rc = read(fd, *buf, st.st_size);
-	if (rc < 0)
-		free(*buf);
-	return rc;
-}
 
 void print_memory() {
 
@@ -73,14 +46,15 @@ void print_regs(uint16_t *regs) {
 	printf("\n");
 }
 
-void run(unsigned char *instr_ptr, unsigned instr_len) {
+void run(struct program *prog) {
 
+	struct cpu_state state;
 	int rc;
 
 	mm_init();
 	cpu_init(&state);
 
-	cpu_instr_load(&state, instr_ptr, instr_len);
+	cpu_instr_load(&state, prog->instr, prog->len);
 
 	do {
 		rc = cpu_tick(&state);
@@ -95,34 +69,20 @@ void run(unsigned char *instr_ptr, unsigned instr_len) {
 
 int main(int argc, char **argv) {
 
-	int rc;
-	int fd;
-	unsigned char *instr_ptr;
-	unsigned instr_len;
+	struct program prog = { 0 };
 
 	if (argc < 2) {
 		fprintf(stderr, "usage: %s <file>\n", argv[0]);
 		return 1;
 	}
 
-	fd = open(argv[1], O_RDONLY);
-	if (fd < 0) {
-		fprintf(stderr, "Could not open file %s: %s\n",
-			argv[1], strerror(errno));
-		return 1;
-	}
-
-	instr_len = load_program(fd, &instr_ptr);
-	close(fd);
-
-	if (instr_len < 0)
+	if (program_loadfromfile(&prog, argv[1]) < 0)
 		return 1;
 
 	// Execute the program.
-	run(instr_ptr, instr_len);
+	run(&prog);
 
-	if (instr_ptr)
-		free(instr_ptr);
+	program_free(&prog);
 
 	return 0;
 }
