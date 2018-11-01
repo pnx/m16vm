@@ -29,7 +29,7 @@
 #include "cpu.h"
 #include "mm.h"
 #include "syscall.h"
-#include "instr.h"
+#include "instr_decode.h"
 
 /* Program */
 unsigned char *instr_mem = NULL;

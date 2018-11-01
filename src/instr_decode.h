@@ -1,4 +1,4 @@
-/* instr.h
+/* instr_decode.h
  *
  *   Copyright (C) 2012,2014   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
@@ -17,55 +17,11 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#ifndef INSTR_H
-#define INSTR_H
+#ifndef INSTR_DECODE_H
+#define INSTR_DECODE_H
 
-#include <stdint.h>
-
-/* Opcodes */
-#define OP_NOOP 	0
-#define OP_ADD		1
-#define OP_MOVL 	2
-#define OP_MOVH 	3
-#define OP_LW		4
-#define OP_SW   	5
-#define OP_BEQ  	6
-#define OP_JMP  	7
-#define OP_JR   	8
-#define OP_INT 		15
-
-/* Register type */
-struct instr_R {
-	uint8_t rs;
-	uint8_t r0;
-	uint8_t r1;
-};
-
-struct instr_RI {
-	uint8_t rs;
-	uint8_t r0;
-	int8_t 	offset;
-};
-
-struct instr_I {
-	uint8_t  rs;
-	int8_t   imm;
-};
-
-struct instr_J {
-	uint16_t addr;
-};
-
-struct instr {
-	uint8_t opcode;
-	union {
-		struct instr_R  r;
-		struct instr_RI ri;
-		struct instr_I  i;
-		struct instr_J  j;
-	};
-};
+#include <instr.h>
 
 void instr_decode(unsigned char *nibble, struct instr *instr);
 
-#endif /* INSTR_H */
+#endif /* INSTR_DECODE_H */

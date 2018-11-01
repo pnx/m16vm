@@ -1,4 +1,4 @@
-/* instr.c
+/* instr.h
  *
  *   Copyright (C) 2012,2014   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
@@ -17,36 +17,53 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#include "instr.h"
+#ifndef INSTR_H
+#define INSTR_H
 
-void instr_decode(unsigned char *instr, struct instr *out) {
+#include <stdint.h>
 
-	out->opcode 	= *instr >> 4;
+/* Opcodes */
+#define OP_NOOP 	0
+#define OP_ADD		1
+#define OP_MOVL 	2
+#define OP_MOVH 	3
+#define OP_LW		4
+#define OP_SW   	5
+#define OP_BEQ  	6
+#define OP_JMP  	7
+#define OP_JR   	8
+#define OP_INT 		15
 
-	if (out->opcode == OP_NOOP)
-		return;
+/* Register type */
+struct instr_R {
+	uint8_t rs;
+	uint8_t r0;
+	uint8_t r1;
+};
 
-	// J-Type
-	if (out->opcode == OP_JMP) {
+struct instr_RI {
+	uint8_t rs;
+	uint8_t r0;
+	int8_t 	offset;
+};
 
-		out->j.addr = ((*instr & 0xF) << 8) + *(instr + 1);
+struct instr_I {
+	uint8_t  rs;
+	int8_t   imm;
+};
 
-		// if MSB (bit 12) is set
-		// perform 2s complement by setting bit 13-16 to 1
-		/*
-		if (out->j.addr & 0x0800)
-			out->j.addr |= 0xF000; */
-	} else {
-		out->r.rs = *instr & 0xF;
+struct instr_J {
+	uint16_t addr;
+};
 
-		// I-Type
-		if (out->opcode == OP_MOVL || out->opcode == OP_MOVH || out->opcode == OP_INT) {
-			out->i.imm = *(instr + 1);
-		}
-		// R/RI-Type
-		else {
-			out->r.r0 = *(instr + 1) >> 4;
-			out->r.r1 = *(instr + 1) & 0xF;
-		}
-	}
-}
+struct instr {
+	uint8_t opcode;
+	union {
+		struct instr_R  r;
+		struct instr_RI ri;
+		struct instr_I  i;
+		struct instr_J  j;
+	};
+};
+
+#endif /* INSTR_H */
