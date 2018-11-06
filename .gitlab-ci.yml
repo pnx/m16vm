@@ -1,0 +1,8 @@
+image: gcc:latest
+
+stages:
+  - build
+
+compile:
+    stage: build
+    script: make
