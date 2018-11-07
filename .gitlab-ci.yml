@@ -2,7 +2,19 @@ image: gcc:latest
 
 stages:
   - build
+  - package
 
 compile:
     stage: build
     script: make
+    
+release:
+    stage: package
+    script: make
+    only: 
+        - tags
+    artifacts:
+        name: "m16-$CI_COMMIT_REF_SLUG"
+        paths:
+            - m16vm 
+            - README.md
