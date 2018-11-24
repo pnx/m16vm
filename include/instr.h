@@ -33,6 +33,7 @@
 #define OP_JMP  	7
 #define OP_JR   	8
 #define OP_INT 		15
+#define OP_NONE		0xFF
 
 /* Register type */
 struct instr_R {
