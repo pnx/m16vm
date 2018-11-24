@@ -31,16 +31,8 @@
 #include "syscall.h"
 #include "instr_decode.h"
 
-/* Program */
-unsigned char *instr_mem = NULL;
-unsigned long instr_cnt = 0;
-
-/* Program counter */
-uint16_t pc = 0;
-
 /* CPU flags */
 #define CPU_FLAGS_HALT (1<<0)
-unsigned char cpu_flags = CPU_FLAGS_HALT;
 
 #define debug(...) fprintf(stderr, __VA_ARGS__)
 
@@ -126,7 +118,7 @@ void cpu_instr_unload(struct cpu_state *state) {
 
 void cpu_set_pc(struct cpu_state *state, uint16_t addr) {
 
-	if (addr > instr_cnt / 2) {
+	if (addr > state->instr_cnt / 2) {
 		fprintf(stderr, "Runtime error: Invalid instruction address %ui\n", addr);
 		state->flags |= CPU_FLAGS_HALT;
 		return;
