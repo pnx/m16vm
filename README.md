@@ -29,8 +29,8 @@ There are 16 different instructions.
 | 0001   | add  | R    | Addition                                |
 | 0010   | movl | I    | move value to register (lowest 8-bits)  |
 | 0011   | movh | I    | move value to register (highest 8-bits) |
-| 0100   | ld   | R    | load word                               |
-| 0101   | sw   | R    | store word                              |
+| 0100   | ld   | RI   | load word                               |
+| 0101   | sw   | RI   | store word                              |
 | 0110   | beq  | RI   | Branch on equal                         |
 | 0111   | jmp  | J    | Jump                                    |
 | 1000   | jr   | I    | Jump (register)                         |
