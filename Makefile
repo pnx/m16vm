@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS = -Iinclude -DMEM_SIZE=32
+CFLAGS = -Iinclude -DMEM_SIZE=32 -DM16_DEBUG_MEM
 LD = $(CC)
 
 VM = m16vm
