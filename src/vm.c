@@ -22,6 +22,7 @@
 #include "mm.h"
 #include "cpu.h"
 
+#ifdef M16_DEBUG_MEM
 void print_memory() {
 
 	int i = 0;
@@ -33,7 +34,11 @@ void print_memory() {
 	}
 	printf("\n");
 }
+#else
+#define print_memory()
+#endif /* ! M16_DEBUG_MEM */
 
+#ifdef M16_DEBUG_REG
 void print_regs(uint16_t *regs) {
 
 	int i = 0;
@@ -45,6 +50,9 @@ void print_regs(uint16_t *regs) {
 	}
 	printf("\n");
 }
+#else
+#define print_regs(regs)
+#endif /* ! M16_DEBUG_REG */
 
 void run(struct program *prog) {
 
