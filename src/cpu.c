@@ -34,7 +34,11 @@
 /* CPU flags */
 #define CPU_FLAGS_HALT (1<<0)
 
+#ifdef M16_DEBUG_INSTR
 #define debug(...) fprintf(stderr, __VA_ARGS__)
+#else
+#define debug(...)
+#endif /* M16_DEBUG_INSTR */
 
 static void execute(struct cpu_state *state, struct instr *instr) {
 
