@@ -56,12 +56,12 @@ static void execute(struct cpu_state *state, struct instr *instr) {
 		state->reg[instr->r.rs] = (state->reg[instr->r.rs] & 0x00FF) | (((uint16_t) instr->i.imm) << 8);
 		break;
 	case OP_LW :
-		debug("lw\tr%i r%i #%i\n", instr->r.rs, instr->r.r0, instr->r.r1);
-		state->reg[instr->r.rs] = mm_lw(state->reg[instr->r.r0] + instr->r.r1);
+		debug("lw\tr%i r%i #%i\n", instr->ri.rs, instr->ri.r0, instr->ri.offset);
+		state->reg[instr->r.rs] = mm_lw(state->reg[instr->ri.r0] + instr->ri.offset);
 		break;
 	case OP_SW :
-		debug("sw\tr%i r%i #%i\n", instr->r.rs, instr->r.r0, instr->r.r1);
-		mm_sw(state->reg[instr->r.rs] + instr->r.r1, state->reg[instr->r.r0]);
+		debug("sw\tr%i r%i #%i\n", instr->ri.rs, instr->ri.r0, instr->ri.offset);
+		mm_sw(state->reg[instr->ri.rs] + instr->ri.offset, state->reg[instr->ri.r0]);
 		break;
 	case OP_JMP :
 		debug("jmp\t#%i\n", instr->j.addr);
