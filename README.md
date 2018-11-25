@@ -71,7 +71,7 @@ Constant operation format (I):
 
 Jump format (J):
 
-	opcode (4) | addr (signed 12)
+	opcode (4) | addr (12)
 
 ## Interrupts
 
