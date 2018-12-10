@@ -29,5 +29,5 @@ ld	$15, $0, 0	; Load memory address stored in R0 into R15
 int     $10, 2		; Print character
 add 	$0, $0, $1	; Add 1 (R1) to counter (R0)
 beq	$15, $2, 1	; Branch to "noop" (skipping next instruction) if R15 = 0 (R2 holds 0)
-jmp     22		; jump back to "_start" label (not implemented atm)
+jmp     _start		; jump back to "_start" label
 noop
