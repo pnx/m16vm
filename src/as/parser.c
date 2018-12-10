@@ -108,10 +108,11 @@ static int match_typeI(struct lexer* lex, struct ast *ast) {
 	return 1;
 }
 
-// J-Type (rs : u8, addr : u16)
+// J-Type (addr : string)
 static int match_typeJ(struct lexer* lex, struct ast *ast) {
 
-	match_imm(1, ast);
+	if (match_operand(lex, TOKEN_LABEL, ast) < 0)
+		return asm_error(lex->lineno, "Expected label at argument 1");
 	match_end;
 	return 1;
 }
