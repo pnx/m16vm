@@ -10,7 +10,9 @@ all: $(PROGRAMS)
 m16vm : src/vm.o src/cpu.o src/mm.o src/instr_decode.o src/syscall.o src/program.o
 	$(LD) $(LDFLAGS) -o $@ $^
 
-as : src/as/as.o src/as/parser.o src/as/lexer.o src/as/instr_encode.o src/as/error.o
+as : src/as/as.o src/as/parser.o src/as/lexer.o \
+	src/as/codegen.o src/as/error.o src/as/symtab.o \
+	src/as/ast.o lib/libm16.a
 	$(LD) $(LDFLAGS) -o $@ $^
 
 lib/libm16.a : lib/src/vector.o
