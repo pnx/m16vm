@@ -1,4 +1,4 @@
-/* instr_encode.h
+/* codegen.h
  *
  *   Copyright (C) 2018   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
@@ -17,11 +17,11 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#ifndef ASM_INSTR_ENCODE_H
-#define ASM_INSTR_ENCODE_H
+#ifndef ASM_CODEGEN_H
+#define ASM_CODEGEN_H
 
-#include <instr.h>
+#include "ast.h"
 
-void instr_encode(struct instr* instr, uint16_t *out);
+void codegen_emit(struct ast_instr* ast, symtab_t* symbols, uint8_t* out);
 
-#endif /* ASM_INSTR_ENCODE_H */
+#endif /* ASM_CODEGEN_H */
