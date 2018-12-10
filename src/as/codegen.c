@@ -27,19 +27,14 @@ void codegen_emit(struct ast_instr* instr, symtab_t* symbols, uint8_t* out) {
 		// No operands, return
 		return;
 
-	// J-Type (We don't have labels yet, so this is just a address)
-	if (instr->operands[0].type == DATATYPE_NUMBER) {
-	//if (instr->operands[0].type == DATATYPE_STRING) {
+	// J-Type
+	if (instr->operands[0].type == DATATYPE_STRING) {
 		uint16_t addr;
 
-		/* if (symtab_get(symbols, instr->operands[0].s, &addr)) {
+		if (symtab_get(symbols, instr->operands[0].s, &addr) >= 0) {
 			out[0] |= (addr >> 8);
 			out[1]  =  addr;
-		}*/
-		addr = instr->operands[0].n;
-
-		out[0] |= (addr >> 8);
-		out[1]  =  addr;
+		}
 	}
 	// R/RI or I
 	else if (instr->operands[0].type == DATATYPE_REGISTER) {
