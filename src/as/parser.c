@@ -116,6 +116,16 @@ static int match_typeJ(struct lexer* lex, struct ast *ast) {
 	return 1;
 }
 
+// Match \n*<opcode>
+static int match_label_decl(struct lexer* lex, struct ast *ast) {
+
+	uint16_t location = ast->instr.size / sizeof(struct ast_instr);
+
+	ast_location(ast, lex->token.value.s, location);
+
+	return 1;
+}
+
 #define opcode_guard(op) \
 	if (op_set == 0) { op_set = 1; ast_instr(ast, op); }
 
@@ -154,8 +164,7 @@ static int parse_line(struct lexer* lex, struct ast *ast) {
 	case TOKEN_OPCODE_JMP : opcode_guard(OP_JMP);
 		return match_typeJ(lex, ast);
 	case TOKEN_LABEL_DECL :
-		asm_warn(lex->lineno, "labels are not supported yet. ignoring.");
-		break;
+		return match_label_decl(lex, ast);
 	default:
 		return asm_error(lex->lineno, "Opcode or label expected");
 	}
