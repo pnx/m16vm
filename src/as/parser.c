@@ -46,8 +46,10 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
 
 	if (type == TOKEN_REG) {
 		ast_instr_operand(ast, DATATYPE_REGISTER, lex->token.value.n);
-	} else {
+	} else if (type == TOKEN_NUMBER) {
 		ast_instr_operand(ast, DATATYPE_NUMBER, lex->token.value.n);
+	} else {
+		ast_instr_operand(ast, DATATYPE_STRING, lex->token.value.s);
 	}
 
 	return 0;
