@@ -175,6 +175,29 @@ static int parse_line(struct lexer* lex, struct ast *ast) {
 	return 0;
 }
 
+// Check the semantics of the program's AST.
+// For now, we only need to check that all
+// referenced labels exist in the symbol table
+static int check_semantics(struct ast* ast) {
+
+	int i;
+
+	// TODO: Need to implement a iterator for vectors.
+	for(i = 0; i < ast->instr.size; i += sizeof(struct ast_instr)) {
+		struct ast_instr *instr = ast->instr.base + i;
+
+		// Only J-Type can have labels.
+		if (instr->opcode == OP_JMP
+			&& instr->operands[0].type == DATATYPE_STRING
+			&& symtab_get(ast->symbols, instr->operands[0].s, NULL) < 0)  {
+
+			return asm_error(0, "Label '%s' is not defined", instr->operands[0].s);
+		}
+	}
+
+	return 0;
+}
+
 /*
  * Main parser function.
  */
@@ -192,8 +215,8 @@ int parse(FILE *source_fd, FILE *dest_fd) {
 		rc = parse_line(&lex, &ast);
 	} while(rc >= 0);
 
-	// TODO: Second pass validation
-	// make sure all referenced labels are actually defined.
+	if (check_semantics(&ast) < 0)
+		goto done;
 
 	// Code generation
 	for(int i = 0; i < ast.instr.size; i += sizeof(struct ast_instr)) {
@@ -206,7 +229,6 @@ int parse(FILE *source_fd, FILE *dest_fd) {
 	}
 
 	// Cleanup
-	ast_free(&ast);
-
+done:	ast_free(&ast);
 	return 0;
 }
