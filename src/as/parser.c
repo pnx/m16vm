@@ -52,7 +52,7 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
 		ast_instr_operand(ast, DATATYPE_STRING, lex->token.value.s);
 	}
 
-	return 0;
+	return 1;
 }
 
 /*
@@ -86,7 +86,7 @@ static int match_typeR(struct lexer* lex, struct ast *ast) {
 	match_reg(3, ast);
 	match_end;
 
-	return 0;
+	return 1;
 }
 
 // RI-Type (rs : u8, r0 : u8, offset : s8)
@@ -144,7 +144,7 @@ static int parse_line(struct lexer* lex, struct ast *ast) {
 
 	// Opcode should come first.
 	switch(lex->token.type) {
-	case TOKEN_EOI: return -1;
+	case TOKEN_EOI: return 0;
 	case TOKEN_EOL: break;
 	case TOKEN_OPCODE_NOOP : ast_instr(ast, OP_NOOP);
 		match_end;
@@ -172,7 +172,7 @@ static int parse_line(struct lexer* lex, struct ast *ast) {
 		return asm_error(lex->lineno, "Opcode or label expected");
 	}
 
-	return 0;
+	return 1;
 }
 
 // Check the semantics of the program's AST.
@@ -203,7 +203,6 @@ static int check_semantics(struct ast* ast) {
  */
 int parse(FILE *source_fd, FILE *dest_fd) {
 
-	int rc;
 	struct lexer lex;
 	struct ast ast;
 
@@ -211,9 +210,13 @@ int parse(FILE *source_fd, FILE *dest_fd) {
 	lexer_init(&lex, source_fd);
 
 	// Parse and build AST.
-	do {
-		rc = parse_line(&lex, &ast);
-	} while(rc >= 0);
+	for(;;) {
+		int rc = parse_line(&lex, &ast);
+		if (rc < 0)
+			goto done;
+		if (rc == 0)
+			break;
+	}
 
 	if (check_semantics(&ast) < 0)
 		goto done;
