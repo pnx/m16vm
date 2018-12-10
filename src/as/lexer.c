@@ -71,12 +71,11 @@ static int read_number(FILE *fp) {
 	return val;
 }
 
-static int read_string(FILE *fp) {
+static int read_string(FILE *fp, char *buf, size_t len) {
 
 	int c, label_decl = 0, i = 0;
-	char buf[64];
 
-	while((c = fgetc(fp)) != EOF && i < 64) {
+	while((c = fgetc(fp)) != EOF && i < len) {
 
 		if (string(c)) {
 			buf[i++] = c;
@@ -160,8 +159,11 @@ int lexer_get_next(struct lexer *lex) {
 			lex->token.type = TOKEN_NUMBER;
 			lex->token.value.n = read_number(lex->fp);
 		} else if (first_string(ch)) {
+			char buf[32];
 			ungetc(ch, lex->fp);
-			lex->token.type = read_string(lex->fp);
+			lex->token.type = read_string(lex->fp, buf, sizeof(buf));
+			if (lex->token.type == TOKEN_LABEL_DECL || lex->token.type == TOKEN_LABEL)
+				strcpy(lex->token.value.s, buf);
 		} else {
 			fprintf(stderr, "ERROR: Invalid character '%c' on line: %i\n", ch, lex->lineno);
 			return -1;
@@ -202,9 +204,9 @@ void lexer_print_token(struct token *token) {
 		break;
 	case TOKEN_OPCODE_INT : printf(" [OP INT] ");
 		break;
-	case TOKEN_LABEL : printf(" [LABEL] ");
+	case TOKEN_LABEL : printf(" [LABEL \"%s\"] ", token->value.s);
 		break;
-	case TOKEN_LABEL_DECL : printf(" [LABEL DECL] ");
+	case TOKEN_LABEL_DECL : printf(" [LABEL DECL \"%s\"] ", token->value.s);
 		break;
 	case TOKEN_REG : printf(" [REG %i] ", token->value.n);
 		break;
