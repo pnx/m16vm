@@ -26,6 +26,25 @@
 #define space(x) ((x) == ' ' || (x) == '\t' || (x) == '\r')
 
 
+struct opcode_ent {
+	char *  name;
+	uint8_t code;
+};
+
+static const struct opcode_ent opcode_table[] = {
+	{ "noop", TOKEN_OPCODE_NOOP },
+	{ "add" , TOKEN_OPCODE_ADD  },
+	{ "movl", TOKEN_OPCODE_MOVL },
+	{ "movh", TOKEN_OPCODE_MOVH },
+	{ "ld"  , TOKEN_OPCODE_LD   },
+	{ "sw"  , TOKEN_OPCODE_SW   },
+	{ "beq" , TOKEN_OPCODE_BEQ  },
+	{ "jmp" , TOKEN_OPCODE_JMP  },
+	{ "jr"  , TOKEN_OPCODE_JR   },
+	{ "int" , TOKEN_OPCODE_INT  },
+	{ NULL  , 0                 },
+};
+
 /**
  * Helper functions
  */
@@ -90,28 +109,13 @@ static int read_string(FILE *fp, char *buf, size_t len) {
 	}
 	buf[i] = '\0';
 
-	if (label_decl) {
+	if (label_decl)
 		return TOKEN_LABEL_DECL;
-	} else if (!strcmp("noop", buf)) {
-		return TOKEN_OPCODE_NOOP;
-	} else if (!strcmp("add", buf)) {
-		return TOKEN_OPCODE_ADD;
-	} else if (!strcmp("movl", buf)) {
-		return TOKEN_OPCODE_MOVL;
-	} else if (!strcmp("movh", buf)) {
-		return TOKEN_OPCODE_MOVH;
-	} else if (!strcmp("ld", buf)) {
-		return TOKEN_OPCODE_LD;
-	} else if (!strcmp("sw", buf)) {
-		return TOKEN_OPCODE_SW;
-	} else if (!strcmp("beq", buf)) {
-		return TOKEN_OPCODE_BEQ;
-	} else if (!strcmp("jmp", buf)) {
-		return TOKEN_OPCODE_JMP;
-	} else if (!strcmp("jr", buf)) {
-		return TOKEN_OPCODE_JR;
-	} else if (!strcmp("int", buf)) {
-		return TOKEN_OPCODE_INT;
+
+	for(i = 0; opcode_table[i].name; i++) {
+
+		if (!strcmp(opcode_table[i].name, buf))
+			return opcode_table[i].code;
 	}
 	return TOKEN_LABEL;
 }
