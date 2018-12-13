@@ -70,14 +70,34 @@ static int read_next(struct lexer *lex) {
  	return c;
  }
 
-static int read_number(FILE *fp) {
+static int read_hex(FILE *fp) {
 
-	int c, neg = 0, val = 0;
+	int c, val = 0;
+
 	while((c = fgetc(fp)) != EOF) {
-		if (neg == 0 && c == '-') {
-			neg = 1;
-			continue;
+		char n = 0;
+		if (number(c)) {
+			n = c - '0';
 		}
+		else if (  (c >= 'a' && c <= 'f')
+			|| (c >= 'A' && c <= 'F')) {
+			n = (c % 0x20) + 9;
+		}
+		else {
+			ungetc(c, fp);
+			break;
+		}
+
+		val = (val * 16) + n;
+	}
+	return val;
+}
+
+static int read_dec(FILE *fp, int neg) {
+
+	int c, val = 0;
+
+	while((c = fgetc(fp)) != EOF) {
 		if (!number(c)) {
 			ungetc(c, fp);
 			break;
@@ -88,6 +108,32 @@ static int read_number(FILE *fp) {
 	if (neg)
 		return -1 * val;
 	return val;
+}
+
+static int read_number(FILE *fp) {
+
+	int neg = 0, c = fgetc(fp);
+
+	// Check for '0x'.
+	if (c == '0') {
+		c = fgetc(fp);
+		if (c == 'x') {
+			// We have a hexadecimal number.
+			return read_hex(fp);
+		}
+		ungetc(c, fp);
+		ungetc('0', fp);
+	}
+	// While we are at it. check for a negative sign.
+	else if (c == '-') {
+		neg = 1;
+	}
+	// We got something else. put it back.
+	else {
+		ungetc(c, fp);
+	}
+
+	return read_dec(fp, neg);
 }
 
 static int read_string(FILE *fp, char *buf, size_t len) {
