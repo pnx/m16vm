@@ -17,7 +17,7 @@ void ast_free(struct ast* ast) {
 	int i;
 
 	// Free all label strings
-	for(int i = 0; i < ast->labels.size; i++) {
+	for(int i = 0; i < ast->labels.size; i += sizeof(char**)) {
 		char *ptr = *((char**) ast->labels.base + i);
 		free(ptr);
 	}
