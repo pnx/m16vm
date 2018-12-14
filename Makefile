@@ -8,7 +8,10 @@
 #    Defines the memory size of the virtual machine (in bytes)
 #
 #  * M16_DEBUG_MEM
-#    Prints memory after program execution
+#    Prints memory after program execution.
+#
+#  * M16_DEBUG_REG
+#    Prints register values after program execution.
 #
 #  * M16_DEBUG_INSTR
 #    Outputs the instructions executed in a human-readable format.
