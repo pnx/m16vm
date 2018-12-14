@@ -39,7 +39,7 @@ void print_memory() {
 #endif /* ! M16_DEBUG_MEM */
 
 #ifdef M16_DEBUG_REG
-void print_regs(uint16_t *regs) {
+void print_regs(int16_t *regs) {
 
 	int i = 0;
 
