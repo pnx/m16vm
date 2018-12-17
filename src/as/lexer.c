@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "error.h"
 #include "lexer.h"
 
 /**
@@ -157,7 +158,7 @@ static int parse_number(struct lexer *lex) {
 	int num;
 
 	if (read_number(lex->fp, &num) < 0)
-		fprintf(stderr, "WARNING: Value truncated on line: %i\n", lex->lineno);
+		asm_warn(lex->lineno, "Value truncated to %i", num);
 
 	lex->token.value.n = num;
 	return 0;
@@ -238,8 +239,7 @@ int lexer_get_next(struct lexer *lex) {
 			if (lex->token.type == TOKEN_LABEL_DECL || lex->token.type == TOKEN_LABEL)
 				strcpy(lex->token.value.s, buf);
 		} else {
-			fprintf(stderr, "ERROR: Invalid character '%c' on line: %i\n", ch, lex->lineno);
-			return -1;
+			return asm_error(lex->lineno, "Invalid character '%c'", ch);
 		}
 	}
 
