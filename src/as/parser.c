@@ -30,12 +30,39 @@
  * Helper functions/macros for defining parser rules.
  */
 
+enum number_size {
+	NUMBER_SIZE_U4,
+	NUMBER_SIZE_S4,
+	NUMBER_SIZE_S8,
+};
+
 // match the next token.
 // returns 0 if the token was of the correct type. -1 otherwise
 static int match_type(struct lexer* lex, enum token_type type) {
 
 	lexer_get_next(lex);
 	return lex->token.type == type ? 0 : -1;
+}
+
+static int validate_number(struct lexer* lex, enum number_size size) {
+
+	int8_t n = lex->token.value.n;
+
+	switch(size) {
+	case NUMBER_SIZE_U4 :
+		if (!(n >= 0x0 && n <= 0xF))
+			return asm_error(lex->lineno, "Value out of range %u", (uint8_t) n);
+		break;
+	case NUMBER_SIZE_S4 :
+		if (!(n >= -8 && n < 8))
+			return asm_error(lex->lineno, "Value out of range %i", n);
+		break;
+	case NUMBER_SIZE_S8 :
+		if (!(n >= -128 && n< 128))
+			return asm_error(lex->lineno, "Value out of range %i", n);
+		break;
+	}
+	return 0;
 }
 
 // Same as match_type() but also generates a operand in the AST.
@@ -59,11 +86,11 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
  * Helper macros for matching tokens.
  */
 #define match_reg(pos, ast) \
-	if (match_operand(lex, TOKEN_REG, ast) < 0) \
+	if (match_operand(lex, TOKEN_REG, ast) < 0 || validate_number(lex, NUMBER_SIZE_U4) < 0) \
 		return asm_error((lex)->lineno, "Expected number at argument %i", pos)
 
-#define match_imm(pos, ast)  \
-	if (match_operand(lex, TOKEN_NUMBER, ast) < 0) \
+#define match_imm(pos, size, ast)  \
+	if (match_operand(lex, TOKEN_NUMBER, ast) < 0 || validate_number(lex, size) < 0) \
 		return asm_error((lex)->lineno, "Expected number at argument %i", pos)
 
 #define match_arg(pos) \
@@ -94,7 +121,7 @@ static int match_typeRI(struct lexer* lex, struct ast *ast) {
 
 	match_reg(1, ast); match_arg(1);
 	match_reg(2, ast); match_arg(2);
-	match_imm(3, ast);
+	match_imm(3, NUMBER_SIZE_S4, ast);
 	match_end;
 
 	return 1;
@@ -104,7 +131,7 @@ static int match_typeRI(struct lexer* lex, struct ast *ast) {
 static int match_typeI(struct lexer* lex, struct ast *ast) {
 
 	match_reg(1, ast); match_arg(1);
-	match_imm(2, ast);
+	match_imm(2, NUMBER_SIZE_S8, ast);
 	match_end;
 
 	return 1;
