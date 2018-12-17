@@ -62,8 +62,8 @@ struct token {
 	 * this can be a string or unsigned short
 	 */
 	union {
-		uint16_t n;
-		char	 s[32];
+		int8_t n;
+		char   s[32];
 	} value;
 };
 
