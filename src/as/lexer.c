@@ -70,7 +70,7 @@ static int read_next(struct lexer *lex) {
  	return c;
  }
 
-static int read_hex(FILE *fp) {
+static int read_hex(FILE *fp, int *out) {
 
 	int c, val = 0;
 
@@ -89,11 +89,18 @@ static int read_hex(FILE *fp) {
 		}
 
 		val = (val * 16) + n;
+		if (val > 0xFF)
+			goto overflow;
 	}
-	return val;
+	*out = val;
+	return 0;
+
+overflow:
+	*out = 0xFF;
+	return -1;
 }
 
-static int read_dec(FILE *fp, int neg) {
+static int read_dec(FILE *fp, int neg, int *out) {
 
 	int c, val = 0;
 
@@ -103,14 +110,23 @@ static int read_dec(FILE *fp, int neg) {
 			break;
 		}
 		val = (val * 10) + (c - '0');
+
+		// Cool trick here.
+		// because the range is -128 (0x80) to +127 (0x7F)
+		// We can do 0x80 - 1 if it is NOT a negative number.
+		if (val > (0x80 - !neg))
+			goto overflow;
 	}
 
-	if (neg)
-		return -1 * val;
-	return val;
+	*out = neg ? -1 * val : val;
+	return 0;
+
+overflow:
+	*out = neg ? -1 * 0x80 : 0x7F;
+	return -1;
 }
 
-static int read_number(FILE *fp) {
+static int read_number(FILE *fp, int *out) {
 
 	int neg = 0, c = fgetc(fp);
 
@@ -119,7 +135,7 @@ static int read_number(FILE *fp) {
 		c = fgetc(fp);
 		if (c == 'x') {
 			// We have a hexadecimal number.
-			return read_hex(fp);
+			return read_hex(fp, out);
 		}
 		ungetc(c, fp);
 		ungetc('0', fp);
@@ -133,7 +149,18 @@ static int read_number(FILE *fp) {
 		ungetc(c, fp);
 	}
 
-	return read_dec(fp, neg);
+	return read_dec(fp, neg, out);
+}
+
+static int parse_number(struct lexer *lex) {
+
+	int num;
+
+	if (read_number(lex->fp, &num) < 0)
+		fprintf(stderr, "WARNING: Value truncated on line: %i\n", lex->lineno);
+
+	lex->token.value.n = num;
+	return 0;
 }
 
 static int read_string(FILE *fp, char *buf, size_t len) {
@@ -195,19 +222,15 @@ int lexer_get_next(struct lexer *lex) {
 		break;
 	case '$' :
 		lex->token.type = TOKEN_REG;
-		num = read_number(lex->fp);
-		// Registers is 8-bit only.
-		if (num > 0xF) {
-			fprintf(stderr, "ERROR: Invalid register value '%i' on line: %i\n", num, lex->lineno);
+		if (parse_number(lex) < 0)
 			return -1;
-		}
-		lex->token.value.n = num;
 		break;
 	default:
 		if (first_number(ch)) {
 			ungetc(ch, lex->fp);
 			lex->token.type = TOKEN_NUMBER;
-			lex->token.value.n = read_number(lex->fp);
+			if (parse_number(lex) < 0)
+				return -1;
 		} else if (first_string(ch)) {
 			char buf[32];
 			ungetc(ch, lex->fp);
