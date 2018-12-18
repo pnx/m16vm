@@ -32,7 +32,7 @@ m16as : src/as/as.o src/as/parser.o src/as/lexer.o \
 	src/as/ast.o lib/libm16.a
 	$(LD) $(LDFLAGS) -o $@ $^
 
-lib/libm16.a : lib/src/vector.o
+lib/libm16.a : lib/vector.o
 	$(AR) rcs $@ $^
 
 clean :

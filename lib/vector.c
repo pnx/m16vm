@@ -19,7 +19,7 @@
  */
 #include <string.h>
 #include <stdlib.h>
-#include <vector.h>
+#include "vector.h"
 
 static void ensure_size(struct vector* v, size_t n) {
 
