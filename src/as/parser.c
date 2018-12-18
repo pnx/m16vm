@@ -87,7 +87,7 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
  */
 #define match_reg(pos, ast) \
 	if (match_operand(lex, TOKEN_REG, ast) < 0 || validate_number(lex, NUMBER_SIZE_U4) < 0) \
-		return asm_error((lex)->lineno, "Expected number at argument %i", pos)
+		return asm_error((lex)->lineno, "Expected register at argument %i", pos)
 
 #define match_imm(pos, size, ast)  \
 	if (match_operand(lex, TOKEN_NUMBER, ast) < 0 || validate_number(lex, size) < 0) \
@@ -105,7 +105,7 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
  * Functions for matching complete instructions.
  */
 
-// R-Type (rs : u8, r0 : u8, r1 : u8)
+// R-Type (rs : u4, r0 : u4, r1 : u4)
 static int match_typeR(struct lexer* lex, struct ast *ast) {
 
 	match_reg(1, ast); match_arg(1);
@@ -116,7 +116,7 @@ static int match_typeR(struct lexer* lex, struct ast *ast) {
 	return 1;
 }
 
-// RI-Type (rs : u8, r0 : u8, offset : s8)
+// RI-Type (rs : u4, r0 : u4, offset : s4)
 static int match_typeRI(struct lexer* lex, struct ast *ast) {
 
 	match_reg(1, ast); match_arg(1);
@@ -127,7 +127,7 @@ static int match_typeRI(struct lexer* lex, struct ast *ast) {
 	return 1;
 }
 
-// I-Type (rs : u8, imm : s8)
+// I-Type (rs : u4, imm : s8)
 static int match_typeI(struct lexer* lex, struct ast *ast) {
 
 	match_reg(1, ast); match_arg(1);
@@ -146,7 +146,6 @@ static int match_typeJ(struct lexer* lex, struct ast *ast) {
 	return 1;
 }
 
-// Match \n*<opcode>
 static int match_label_decl(struct lexer* lex, struct ast *ast) {
 
 	uint16_t location = ast->instr.size / sizeof(struct ast_instr);
