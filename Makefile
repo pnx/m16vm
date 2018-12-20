@@ -24,15 +24,16 @@ PROGRAMS = m16vm m16as
 
 all: $(PROGRAMS)
 
-m16vm : vm/vm.o vm/cpu.o vm/mm.o vm/instr_decode.o vm/syscall.o vm/program.o
+m16vm : vm/vm.o vm/cpu.o vm/mm.o vm/instr_decode.o \
+	vm/syscall.o vm/program.o lib/libm16.a
 	$(LD) $(LDFLAGS) -o $@ $^
 
 m16as : as/as.o as/parser.o as/lexer.o \
-	as/codegen.o as/error.o as/symtab.o \
-	as/ast.o lib/libm16.a
+	as/codegen.o as/symtab.o \
+	as/ast.o as/asm_error.o lib/libm16.a
 	$(LD) $(LDFLAGS) -o $@ $^
 
-lib/libm16.a : lib/vector.o
+lib/libm16.a : lib/vector.o lib/error.o
 	$(AR) rcs $@ $^
 
 clean :

@@ -20,7 +20,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "error.h"
+#include "asm_error.h"
 #include "codegen.h"
 #include "ast.h"
 #include "lexer.h"

@@ -17,11 +17,11 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#ifndef ASM_ERROR_H
-#define ASM_ERROR_H
+#ifndef M16_ERROR_H
+#define M16_ERROR_H
 
-void asm_warn(int lineno, const char *fmt, ...);
+void warn(const char *message, ...);
 
-int asm_error(int lineno, const char *fmt, ...);
+int error(const char *message, ...);
 
-#endif /* ASM_ERROR_H */
+#endif /* M16_ERROR_H */

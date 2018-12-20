@@ -1,4 +1,4 @@
-/* error.c
+/* asm_error.h
  *
  *   Copyright (C) 2018   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
@@ -17,30 +17,13 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  *   MA 02110-1301, USA.
  */
-#include <stdio.h>
-#include <stdarg.h>
-#include "error.h"
+#ifndef ASM_ERROR_H
+#define ASM_ERROR_H
 
-void asm_warn(int lineno, const char *fmt, ...) {
+#include <error.h>
 
-	va_list vl;
+void asm_warn(int lineno, const char *message, ...);
 
-	fprintf(stderr, "Line %i: Warning: ", lineno);
-	va_start(vl, fmt);
-	vfprintf(stderr, fmt, vl);
-	va_end(vl);
-	fprintf(stderr, "\n");
-}
+int asm_error(int lineno, const char *message, ...);
 
-int asm_error(int lineno, const char *fmt, ...) {
-
-	va_list vl;
-
-	fprintf(stderr, "Line %i: Error: ", lineno);
-	va_start(vl, fmt);
-	vfprintf(stderr, fmt, vl);
-	va_end(vl);
-	fprintf(stderr, "\n");
-
-	return -1;
-}
+#endif /* ASM_ERROR_H */

@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "error.h"
+#include "asm_error.h"
 #include "lexer.h"
 
 /**
