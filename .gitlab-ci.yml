@@ -7,14 +7,15 @@ stages:
 compile:
     stage: build
     script: make
-    
+
 release:
     stage: package
     script: make
-    only: 
+    only:
         - tags
     artifacts:
         name: "m16-$CI_COMMIT_REF_SLUG"
         paths:
-            - m16vm 
+            - m16vm
+            - m16as
             - README.md
