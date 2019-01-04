@@ -16,9 +16,10 @@
 #  * M16_DEBUG_INSTR
 #    Outputs the instructions executed in a human-readable format.
 #
-CC = gcc
-CFLAGS = -g -Ilib/include -DMEM_SIZE=32 -DM16_DEBUG_MEM
-LD = $(CC)
+#  Example: make EXT_CFLAGS="-DM16_DEBUG_INSTR -DM16_DEBUG_MEM"
+CC 	= gcc
+CFLAGS 	= -Ilib/include $(EXT_CFLAGS)
+LD 	= $(CC)
 
 ifndef VERBOSE
 	QUIET_CC = @echo " CC" $@;
