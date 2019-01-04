@@ -28,14 +28,7 @@ void instr_decode(unsigned char *instr, struct instr *out) {
 
 	// J-Type
 	if (out->opcode == OP_JMP) {
-
 		out->j.addr = ((*instr & 0xF) << 8) + *(instr + 1);
-
-		// if MSB (bit 12) is set
-		// perform 2s complement by setting bit 13-16 to 1
-		/*
-		if (out->j.addr & 0x0800)
-			out->j.addr |= 0xF000; */
 	} else {
 		out->r.rs = *instr & 0xF;
 
