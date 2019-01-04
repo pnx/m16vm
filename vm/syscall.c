@@ -1,4 +1,4 @@
-/* syscall.h
+/* syscall.c
 *
 *   Copyright (C) 2012,2014-2015   Henrik Hautakoski <henrik.hautakoski@gmail.com>
 *
