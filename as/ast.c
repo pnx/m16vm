@@ -1,6 +1,6 @@
 /* ast.c
  *
- *   Copyright (C) 2018   Henrik Hautakoski <henrik.hautakoski@gmail.com>
+ *   Copyright (C) 2018-2019   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
