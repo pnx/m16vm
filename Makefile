@@ -20,21 +20,30 @@ CC = gcc
 CFLAGS = -g -Ilib/include -DMEM_SIZE=32 -DM16_DEBUG_MEM
 LD = $(CC)
 
+ifndef VERBOSE
+	QUIET_CC = @echo " CC" $@;
+	QUIET_LD = @echo " LD" $@;
+	QUIET_AR = @echo " AR" $@;
+endif
+
 PROGRAMS = m16vm m16as
 
 all: $(PROGRAMS)
 
 m16vm : vm/vm.o vm/cpu.o vm/mm.o vm/instr_decode.o \
 	vm/syscall.o vm/program.o lib/libm16.a
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(QUIET_LD)$(LD) $(LDFLAGS) -o $@ $^
 
 m16as : as/as.o as/parser.o as/lexer.o \
 	as/codegen.o as/symtab.o \
 	as/ast.o lib/libm16.a
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(QUIET_LD)$(LD) $(LDFLAGS) -o $@ $^
 
 lib/libm16.a : lib/vector.o lib/error.o
-	$(AR) rcs $@ $^
+	$(QUIET_AR)$(AR) rcs $@ $^
+
+%.o : %.c
+	$(QUIET_CC)$(CC) $(CFLAGS) -c $< -o $@
 
 clean :
 	$(RM) as/*.o
