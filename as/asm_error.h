@@ -22,8 +22,10 @@
 
 #include <error.h>
 
-void asm_warn(int lineno, const char *message, ...);
+#define asm_warn(lineno, msg, ...) \
+	warn("Line: %i " msg, lineno, ##__VA_ARGS__)
 
-int asm_error(int lineno, const char *message, ...);
+#define asm_error(lineno, msg, ...) \
+	error("Line: %i " msg, lineno, ##__VA_ARGS__)
 
 #endif /* ASM_ERROR_H */
