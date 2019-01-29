@@ -18,41 +18,14 @@
  *   MA 02110-1301, USA.
  */
 #include <stdio.h>
+#include <string.h>
 #include "program.h"
 #include "mm.h"
 #include "cpu.h"
+#include "debug.h"
 
-#ifdef M16_DEBUG_MEM
-void print_memory() {
-
-	int i = 0;
-
-	printf("\n");
-
-	for(i = 0; i < 32; i++) {
-		printf("%.2X ", memory[i]);
-	}
-	printf("\n");
-}
-#else
-#define print_memory()
-#endif /* ! M16_DEBUG_MEM */
-
-#ifdef M16_DEBUG_REG
-void print_regs(int16_t *regs) {
-
-	int i = 0;
-
-	printf("\n");
-
-	for(i = 0; i < CPU_NUM_REGS; i++) {
-		printf("r%i = %i\n", i, regs[i]);
-	}
-	printf("\n");
-}
-#else
-#define print_regs(regs)
-#endif /* ! M16_DEBUG_REG */
+static unsigned debug_mem = 0;
+static unsigned debug_reg = 0;
 
 void run(struct program *prog) {
 
@@ -68,9 +41,11 @@ void run(struct program *prog) {
 		rc = cpu_tick(&state);
 	} while(rc == 0);
 
-	print_regs(state.reg);
+	if (debug_reg)
+		debug_print_regs(state.reg);
 
-	print_memory();
+	if (debug_mem)
+		debug_print_memory(memory);
 
 	mm_exit();
 }
@@ -78,13 +53,32 @@ void run(struct program *prog) {
 int main(int argc, char **argv) {
 
 	struct program prog = { 0 };
+	const char *filename;
+	int i;
 
 	if (argc < 2) {
 		fprintf(stderr, "usage: %s <file>\n", argv[0]);
 		return 1;
 	}
 
-	if (program_loadfromfile(&prog, argv[1]) < 0)
+	// Parse options.
+	for(i = 1; i < argc; i++) {
+
+		if (argv[i][0] == '-') {
+			if (!strcmp(argv[i], "-dmem")) {
+				debug_mem = 1;
+			} else if (!strcmp(argv[i], "-dreg")) {
+				debug_reg = 1;
+			} else {
+				fprintf(stderr, "Invalid option '%s'\n", argv[i]);
+			}
+		} else {
+			filename = argv[i];
+			break;
+		}
+	}
+
+	if (program_loadfromfile(&prog, filename) < 0)
 		return 1;
 
 	// Execute the program.
