@@ -7,16 +7,10 @@
 #  * MEM_SIZE=<value>
 #    Defines the memory size of the virtual machine (in bytes)
 #
-#  * M16_DEBUG_MEM
-#    Prints memory after program execution.
-#
-#  * M16_DEBUG_REG
-#    Prints register values after program execution.
-#
 #  * M16_DEBUG_INSTR
 #    Outputs the instructions executed in a human-readable format.
 #
-#  Example: make EXT_CFLAGS="-DM16_DEBUG_INSTR -DM16_DEBUG_MEM"
+#  Example: make EXT_CFLAGS="-DM16_DEBUG_INSTR -DMEM_SIZE=512"
 CC 	= gcc
 CFLAGS 	= -Ilib/include $(EXT_CFLAGS)
 LD 	= $(CC)
