@@ -32,7 +32,7 @@ PROGRAMS = m16vm m16as
 all: $(PROGRAMS)
 
 m16vm : vm/vm.o vm/cpu.o vm/mm.o vm/instr_decode.o \
-	vm/syscall.o vm/program.o lib/libm16.a
+	vm/syscall.o vm/program.o vm/debug.o lib/libm16.a
 	$(QUIET_LD)$(LD) $(LDFLAGS) -o $@ $^
 
 m16as : as/as.o as/parser.o as/lexer.o \
