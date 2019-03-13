@@ -33,7 +33,7 @@ void warn(const char *message, ...) {
 	va_list vl;
 
 	va_start(vl, message);
-	_write(stderr, "warning", message, vl);
+	_write(stderr, "Warning", message, vl);
 	va_end(vl);
 }
 
@@ -42,7 +42,7 @@ int error(const char *message, ...) {
 	va_list vl;
 
 	va_start(vl, message);
-	_write(stderr, "error", message, vl);
+	_write(stderr, "Error", message, vl);
 	va_end(vl);
 	return -1;
 }
