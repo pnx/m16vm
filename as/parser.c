@@ -72,9 +72,9 @@ static int match_operand(struct lexer* lex, enum token_type type, struct ast *as
 		return -1;
 
 	if (type == TOKEN_REG) {
-		ast_instr_operand(ast, DATATYPE_REGISTER, lex->token.value.n);
+		ast_instr_operand(ast, DATATYPE_REGISTER, *((void**) &lex->token.value.n));
 	} else if (type == TOKEN_NUMBER) {
-		ast_instr_operand(ast, DATATYPE_NUMBER, lex->token.value.n);
+		ast_instr_operand(ast, DATATYPE_NUMBER, *((void**) &lex->token.value.n));
 	} else {
 		ast_instr_operand(ast, DATATYPE_STRING, lex->token.value.s);
 	}
