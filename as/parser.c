@@ -252,7 +252,7 @@ int parse(FILE *source_fd, FILE *dest_fd) {
 		struct ast_instr *instr = ast.instr.base + i;
 		uint8_t code[2] = { 0 };
 
-		codegen_emit(instr, ast.symbols, &code);
+		codegen_emit(instr, ast.symbols, code);
 
 		fwrite(&code, sizeof(code), 1, dest_fd);
 	}
