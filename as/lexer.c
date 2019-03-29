@@ -20,30 +20,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "asm_error.h"
+#include "lexer/grammar.h"
 #include "lexer.h"
-
-/**
- * macros for the grammar.
- */
-
-// Numbers is defined as [0-9]
-#define number(x) ((x) >= '0' && (x) <= '9')
-
-// The first digit can however also contain '-'
-#define first_number(x) (number(x) || (x) == '-' )
-
-// First character in strings can be [a-z][A-Z] or '_'
-#define first_string(x)			\
-	(  ((x) >= 'a' && (x) <= 'z')   \
-	|| ((x) >= 'A' && (x) <= 'Z')	\
-	||  (x) == '_'			)
-
-// All characters after can also include numbers or ':'
-#define string(x) \
-	(first_string(x) || number(x))
-
-#define space(x) ((x) == ' ' || (x) == '\t' || (x) == '\r')
-
 
 struct opcode_ent {
 	char *  name;
@@ -82,7 +60,7 @@ static int read_next(struct lexer *lex) {
 
  		if (c == ';') {
  			comment = 1;
- 		} else if (!space(c)) {
+ 		} else if (!lexer_is_space(c)) {
  			break;
  		}
  	}
@@ -95,7 +73,7 @@ static int read_hex(FILE *fp, int *out) {
 
 	while((c = fgetc(fp)) != EOF) {
 		char n = 0;
-		if (number(c)) {
+		if (lexer_is_num(c)) {
 			n = c - '0';
 		}
 		else if (  (c >= 'a' && c <= 'f')
@@ -124,7 +102,7 @@ static int read_dec(FILE *fp, int neg, int *out) {
 	int c, val = 0;
 
 	while((c = fgetc(fp)) != EOF) {
-		if (!number(c)) {
+		if (!lexer_is_num(c)) {
 			ungetc(c, fp);
 			break;
 		}
@@ -188,7 +166,7 @@ static int read_string(FILE *fp, char *buf, size_t len) {
 
 	while((c = fgetc(fp)) != EOF && i < len) {
 
-		if (string(c)) {
+		if (lexer_is_string(c)) {
 			buf[i++] = c;
 		} else {
 			if (c == ':') {
@@ -245,12 +223,12 @@ int lexer_get_next(struct lexer *lex) {
 			return -1;
 		break;
 	default:
-		if (first_number(ch)) {
+		if (lexer_is_num_start(ch)) {
 			ungetc(ch, lex->fp);
 			lex->token.type = TOKEN_NUMBER;
 			if (parse_number(lex) < 0)
 				return -1;
-		} else if (first_string(ch)) {
+		} else if (lexer_is_string_start(ch)) {
 			char buf[32];
 			ungetc(ch, lex->fp);
 			lex->token.type = read_string(lex->fp, buf, sizeof(buf));
