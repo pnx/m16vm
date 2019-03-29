@@ -29,7 +29,7 @@ m16vm : vm/vm.o vm/cpu.o vm/mm.o vm/instr_decode.o \
 	vm/syscall.o vm/program.o vm/debug.o lib/libm16.a
 	$(QUIET_LD)$(LD) $(LDFLAGS) -o $@ $^
 
-m16as : as/as.o as/parser.o as/lexer.o \
+m16as : as/as.o as/parser.o as/lexer.o as/lexer/number.o \
 	as/codegen.o as/symtab.o \
 	as/ast.o lib/libm16.a
 	$(QUIET_LD)$(LD) $(LDFLAGS) -o $@ $^
@@ -42,6 +42,7 @@ lib/libm16.a : lib/vector.o lib/error.o
 
 clean :
 	$(RM) as/*.o
+	$(RM) as/lexer/*.o
 	$(RM) vm/*.o
 	$(RM) lib/*.o
 	$(RM) lib/*.a

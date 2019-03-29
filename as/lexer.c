@@ -21,6 +21,7 @@
 #include <string.h>
 #include "asm_error.h"
 #include "lexer/grammar.h"
+#include "lexer/number.h"
 #include "lexer.h"
 
 struct opcode_ent {
@@ -67,62 +68,6 @@ static int read_next(struct lexer *lex) {
  	return c;
  }
 
-static int read_hex(FILE *fp, int *out) {
-
-	int c, val = 0;
-
-	while((c = fgetc(fp)) != EOF) {
-		char n = 0;
-		if (lexer_is_num(c)) {
-			n = c - '0';
-		}
-		else if (  (c >= 'a' && c <= 'f')
-			|| (c >= 'A' && c <= 'F')) {
-			n = (c % 0x20) + 9;
-		}
-		else {
-			ungetc(c, fp);
-			break;
-		}
-
-		val = (val * 16) + n;
-		if (val > 0xFF)
-			goto overflow;
-	}
-	*out = val;
-	return 0;
-
-overflow:
-	*out = 0xFF;
-	return -1;
-}
-
-static int read_dec(FILE *fp, int neg, int *out) {
-
-	int c, val = 0;
-
-	while((c = fgetc(fp)) != EOF) {
-		if (!lexer_is_num(c)) {
-			ungetc(c, fp);
-			break;
-		}
-		val = (val * 10) + (c - '0');
-
-		// Cool trick here.
-		// because the range is -128 (0x80) to +127 (0x7F)
-		// We can do 0x80 - 1 if it is NOT a negative number.
-		if (val > (0x80 - !neg))
-			goto overflow;
-	}
-
-	*out = neg ? -1 * val : val;
-	return 0;
-
-overflow:
-	*out = neg ? -1 * 0x80 : 0x7F;
-	return -1;
-}
-
 static int read_number(FILE *fp, int *out) {
 
 	int neg = 0, c = fgetc(fp);
@@ -132,7 +77,7 @@ static int read_number(FILE *fp, int *out) {
 		c = fgetc(fp);
 		if (c == 'x') {
 			// We have a hexadecimal number.
-			return read_hex(fp, out);
+			return lexer_read_num_hex(fp, out);
 		}
 		ungetc(c, fp);
 		ungetc('0', fp);
@@ -146,7 +91,8 @@ static int read_number(FILE *fp, int *out) {
 		ungetc(c, fp);
 	}
 
-	return read_dec(fp, neg, out);
+	// Must be a decimal number.
+	return lexer_read_num_dec(fp, neg, out);
 }
 
 static int parse_number(struct lexer *lex) {
