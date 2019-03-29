@@ -49,24 +49,24 @@ static const struct opcode_ent opcode_table[] = {
 
 static int read_next(struct lexer *lex) {
 
- 	int c, comment = 0;
+	int c, comment = 0;
 
- 	while((c = fgetc(lex->fp)) != EOF) {
+	while((c = fgetc(lex->fp)) != EOF) {
 
- 		if (c == '\n')
+		if (c == '\n')
 			break;
 
- 		if (comment)
- 			continue;
+		if (comment)
+			continue;
 
- 		if (c == ';') {
- 			comment = 1;
- 		} else if (!lexer_is_space(c)) {
- 			break;
- 		}
- 	}
- 	return c;
- }
+		if (c == ';') {
+			comment = 1;
+		} else if (!lexer_is_space(c)) {
+			break;
+		}
+	}
+	return c;
+}
 
 static int read_number(FILE *fp, int *out) {
 
