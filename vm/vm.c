@@ -64,10 +64,10 @@ int main(int argc, char **argv) {
 	// Parse options.
 	for(i = 1; i < argc; i++) {
 
-		if (argv[i][0] == '-') {
-			if (!strcmp(argv[i], "-dmem")) {
+		if (argv[i][0] == '-' && argv[i][1] == '-') {
+			if (!strcmp(argv[i] + 2, "dmem")) {
 				debug_mem = 1;
-			} else if (!strcmp(argv[i], "-dreg")) {
+			} else if (!strcmp(argv[i] + 2, "dreg")) {
 				debug_reg = 1;
 			} else {
 				fprintf(stderr, "Invalid option '%s'\n", argv[i]);
