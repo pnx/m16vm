@@ -52,7 +52,7 @@ overflow:
 
 int lexer_read_num_dec(FILE *fp, int neg, int *out) {
 
-	int c, val = 0;
+	int c, val = 0, oflow = 0;
 
 	while((c = fgetc(fp)) != EOF) {
 		if (!lexer_is_num(c)) {
@@ -64,14 +64,15 @@ int lexer_read_num_dec(FILE *fp, int neg, int *out) {
 		// Cool trick here.
 		// because the range is -128 (0x80) to +127 (0x7F)
 		// We can do 0x80 - 1 if it is NOT a negative number.
-		if (val > (0x80 - !neg))
-			goto overflow;
+		if (val > (0x80 - !neg)) {
+			// Truncate value.
+			val = 0x80 - !neg;
+			oflow = 1;
+			break;
+		}
+
 	}
 
 	*out = neg ? -1 * val : val;
-	return 0;
-
-overflow:
-	*out = neg ? -1 * 0x80 : 0x7F;
-	return -1;
+	return -oflow;
 }
