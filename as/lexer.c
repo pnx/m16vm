@@ -156,19 +156,18 @@ int lexer_get_next(struct lexer *lex) {
 		lex->lineno++;
 
 	switch(ch) {
-	case EOF : lex->token.type = TOKEN_EOI;
+	case EOF  : lex->token.type = TOKEN_EOI;
 		break;
-	case '\n' :
-		lex->token.type = TOKEN_EOL;
+	case '\n' : lex->token.type = TOKEN_EOL;
 		break;
-	case ',' : lex->token.type = TOKEN_ARG_SEP;
+	case ','  : lex->token.type = TOKEN_ARG_SEP;
 		break;
-	case '$' :
+	case '$'  :
 		lex->token.type = TOKEN_REG;
 		if (parse_number(lex) < 0)
 			return -1;
 		break;
-	default:
+	default :
 		if (lexer_is_num_start(ch)) {
 			ungetc(ch, lex->fp);
 			lex->token.type = TOKEN_NUMBER;
