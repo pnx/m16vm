@@ -55,10 +55,16 @@ int lexer_read_num_dec(FILE *fp, int neg, int *out) {
 	int c, val = 0, oflow = 0;
 
 	while((c = fgetc(fp)) != EOF) {
+
 		if (!lexer_is_num(c)) {
 			ungetc(c, fp);
 			break;
 		}
+
+		// Ignore if we have overflowed, but keep reading all numbers.
+		if (oflow)
+			continue;
+
 		val = (val * 10) + (c - '0');
 
 		// Cool trick here.
@@ -67,10 +73,10 @@ int lexer_read_num_dec(FILE *fp, int neg, int *out) {
 		if (val > (0x80 - !neg)) {
 			// Truncate value.
 			val = 0x80 - !neg;
-			oflow = 1;
-			break;
-		}
 
+			// Set overflow flag.
+			oflow = 1;
+		}
 	}
 
 	*out = neg ? -1 * val : val;
