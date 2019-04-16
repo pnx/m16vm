@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 	int i;
 
 	if (argc < 2) {
-		fprintf(stderr, "usage: %s <file>\n", argv[0]);
+		fprintf(stderr, "usage: %s [ --dmem | --dreg ] <file>\n", argv[0]);
 		return 1;
 	}
 
