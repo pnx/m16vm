@@ -31,13 +31,12 @@
 int16_t* base_addr = NULL;
 uint8_t *memory = NULL;
 
-static void check_bounds(uint16_t addr) {
-
-	if (addr > MEM_SIZE) {
-		fprintf(stderr, EXCEPTION_STRING, addr);
-		exit(1);
+#define __check_bounds(addr) 				\
+	if ((addr) > MEM_SIZE) {			\
+		fprintf(stderr, EXCEPTION_STRING, addr);\
+		exit(1);				\
 	}
-}
+
 
 void mm_init() {
 
@@ -56,14 +55,14 @@ void mm_exit() {
 
 void mm_sw(uint16_t addr, int16_t value) {
 
-	check_bounds(addr);
+	__check_bounds(addr);
 
 	base_addr[addr] = value;
 }
 
 int16_t mm_lw(uint16_t addr) {
 
-	check_bounds(addr);
+	__check_bounds(addr);
 
 	return base_addr[addr];
 }
