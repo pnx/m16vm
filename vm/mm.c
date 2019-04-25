@@ -26,29 +26,30 @@
 #define MEM_SIZE 65536
 #endif
 
+// Get a WORD aligned (16-bit) address.
+// Casts the 8-bit pointer (memory) to 16-bit (WORD) and add offset.
+#define addr_align_word(offset) \
+	(((uint16_t*) memory) + (offset))
+
 #define EXCEPTION_STRING "Runtime exception: Memory address '%u' is out of bounds.\n"
 
-int16_t* base_addr = NULL;
 uint8_t *memory = NULL;
 
 #define __check_bounds(addr) 				\
-	if ((addr) > MEM_SIZE) {			\
+	if ((addr) + 1 > MEM_SIZE) {			\
 		fprintf(stderr, EXCEPTION_STRING, addr);\
 		exit(1);				\
 	}
 
-
 void mm_init() {
 
-	base_addr = malloc(MEM_SIZE);
-	memory = (uint8_t*) base_addr;
+	memory = (uint8_t*) malloc(MEM_SIZE);
 }
 
 void mm_exit() {
 
-	if (base_addr) {
-		free(base_addr);
-		base_addr = NULL;
+	if (memory) {
+		free(memory);
 		memory = NULL;
 	}
 }
@@ -57,12 +58,12 @@ void mm_sw(uint16_t addr, int16_t value) {
 
 	__check_bounds(addr);
 
-	base_addr[addr] = value;
+	*addr_align_word(addr) = value;
 }
 
 int16_t mm_lw(uint16_t addr) {
 
 	__check_bounds(addr);
 
-	return base_addr[addr];
+	return *addr_align_word(addr);
 }
