@@ -84,7 +84,7 @@ static void execute(struct cpu_state *state, struct instr *instr) {
 		break;
 	default :
 		fprintf(stderr, "Invalid instruction (%.2X)\n", instr->opcode);
-		state->flags |= CPU_FLAGS_HALT;
+		state->pc = state->instr_cnt;
 		break;
 	}
 }
@@ -92,7 +92,6 @@ static void execute(struct cpu_state *state, struct instr *instr) {
 void cpu_init(struct cpu_state *state)
 {
 	state->pc = 0;
-	state->flags = 0;
 	memset(state->reg, 0, sizeof(state->reg[0]) * CPU_NUM_REGS);
 
 	state->instr_mem = NULL;
@@ -119,18 +118,12 @@ void cpu_instr_unload(struct cpu_state *state) {
 
 void cpu_set_pc(struct cpu_state *state, uint16_t addr) {
 
-	if (addr > state->instr_cnt / 2) {
+	if (addr > state->instr_cnt / 2)
 		fprintf(stderr, "Runtime error: Invalid instruction address %ui\n", addr);
-		state->flags |= CPU_FLAGS_HALT;
-		return;
-	}
 	state->pc = addr;
 }
 
 static unsigned char* instr_fetch(struct cpu_state *state) {
-
-	if (state->pc + 1 >= state->instr_cnt >> 1)
-		state->flags |= CPU_FLAGS_HALT;
 
 	return state->instr_mem + (state->pc++ << 1);
 }
@@ -140,12 +133,12 @@ int cpu_tick(struct cpu_state *state) {
 	struct instr instr;
 	unsigned char* next;
 
-	if (state->flags & CPU_FLAGS_HALT) {
-		return 1;
-	}
-
 	// Fetch next instruction
 	next = instr_fetch(state);
+
+	// We abort if we move past the last program address.
+	if (state->pc > state->instr_cnt >> 1)
+		return 1;
 
 	// decode instruction.
 	instr_decode(next, &instr);

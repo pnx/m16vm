@@ -25,17 +25,12 @@
 
 #define CPU_NUM_REGS 16
 
-#define CPU_FLAGS_HALT (1<<0)
-
 struct cpu_state {
 	// Registers r0, r15
 	int16_t reg[CPU_NUM_REGS];
 
 	// Program counter
 	uint16_t pc;
-
-	// flags
-	unsigned char flags;
 
 	// Instruction
 	unsigned char *instr_mem;
