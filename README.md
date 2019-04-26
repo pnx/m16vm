@@ -86,6 +86,8 @@ The interrupt number is stored in `reg` (note that for interrupts this is a cons
 
 The `data` field can be used as an argument to the interrupt.
 
+### Interrupt functions overview
+
 | Number | Name      | data   | Description                                              |
 |-------:|-----------|--------|----------------------------------------------------------|
 |     10 | I/O Write | format | Outputs a value to the screen, value are stored in `r15` |
