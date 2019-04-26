@@ -106,3 +106,8 @@ Example programs.
 -----------------
 
 in the `programs` directory, there is some example programs to run.
+
+Author
+======
+
+Henrik Hautakoski - [henrik.hautakoski@gmail.com](mailto:henrik.hautakoski@gmail.com)
