@@ -27,13 +27,13 @@
 #endif
 
 // Get a WORD aligned (16-bit) address.
-// Casts the 8-bit pointer (memory) to 16-bit (WORD) and add offset.
+// Casts the 8-bit pointer (mm_base_addr) to 16-bit (WORD) and add offset.
 #define addr_align_word(offset) \
-	(((uint16_t*) memory) + (offset))
+	(((uint16_t*) mm_base_addr) + (offset))
 
 #define EXCEPTION_STRING "Runtime exception: Memory address '%u' is out of bounds.\n"
 
-uint8_t *memory = NULL;
+uint8_t *mm_base_addr = NULL;
 
 #define __check_bounds(addr) 				\
 	if ((addr) + 1 > MEM_SIZE) {			\
@@ -43,14 +43,14 @@ uint8_t *memory = NULL;
 
 void mm_init() {
 
-	memory = (uint8_t*) malloc(MEM_SIZE);
+	mm_base_addr = (uint8_t*) malloc(MEM_SIZE);
 }
 
 void mm_exit() {
 
-	if (memory) {
-		free(memory);
-		memory = NULL;
+	if (mm_base_addr) {
+		free(mm_base_addr);
+		mm_base_addr = NULL;
 	}
 }
 

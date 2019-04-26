@@ -22,7 +22,7 @@
 
 #include <stdint.h>
 
-extern uint8_t *memory;
+extern uint8_t *mm_base_addr;
 
 void mm_init();
 

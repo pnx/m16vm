@@ -45,7 +45,7 @@ void run(struct program *prog) {
 		debug_print_regs(state.reg);
 
 	if (debug_mem)
-		debug_print_memory(memory);
+		debug_print_memory(mm_base_addr);
 
 	mm_exit();
 }
