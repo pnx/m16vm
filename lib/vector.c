@@ -33,7 +33,7 @@ static void ensure_size(struct vector* v, size_t n) {
 
 void vector_init(struct vector* v, size_t block_size) {
 
-	v->blk_sz = block_size > 0 ? block_size : 64;
+	v->blk_sz = block_size > 0 ? block_size : VECTOR_BLOCK_SIZE;
 	v->alloc  = 0;
 	v->size   = 0;
 	v->base   = NULL;

@@ -30,6 +30,8 @@ struct vector  {
 	void  *base;
 };
 
+#define VECTOR_BLOCK_SIZE 64
+
 #define VECTOR_INIT(block_size) { block_size, 0, 0, NULL }
 
 void vector_init(struct vector* v, size_t block_size);
