@@ -26,6 +26,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include "error.h"
 #include "cpu.h"
 #include "mm.h"
 #include "syscall.h"
@@ -83,7 +84,7 @@ static void execute(struct cpu_state *state, struct instr *instr) {
 		vm_syscall(instr->i.rs, instr->i.imm, state->reg);
 		break;
 	default :
-		fprintf(stderr, "Invalid instruction (%.2X)\n", instr->opcode);
+		error("Invalid instruction (%.2X)", instr->opcode);
 		state->pc = state->instr_cnt;
 		break;
 	}
@@ -101,8 +102,7 @@ void cpu_init(struct cpu_state *state)
 int cpu_instr_load(struct cpu_state *state, void *ptr, unsigned len) {
 
 	if (len % 2) {
-		fprintf(stderr, "Error: Instruction length must be a multiple of 2\n");
-		return -1;
+		return error("Instruction length must be a multiple of 2");
 	}
 
 	state->instr_mem = ptr;
@@ -119,7 +119,7 @@ void cpu_instr_unload(struct cpu_state *state) {
 void cpu_set_pc(struct cpu_state *state, uint16_t addr) {
 
 	if (addr > state->instr_cnt / 2)
-		fprintf(stderr, "Runtime error: Invalid instruction address %ui\n", addr);
+		error("Invalid instruction address %ui", addr);
 	state->pc = addr;
 }
 
