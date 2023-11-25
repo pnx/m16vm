@@ -22,8 +22,8 @@
 #include "mm.h"
 
 #ifndef MEM_SIZE
-/* Set a default memory size. (2^16) */
-#define MEM_SIZE 65536
+/* Set a default memory size. (2^8) */
+#define MEM_SIZE 256
 #endif
 
 // Get a WORD aligned (16-bit) address.
