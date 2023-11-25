@@ -1,6 +1,6 @@
 /* as.c
  *
- *   Copyright (C) 2018-2019  Henrik Hautakoski <henrik@fiktivkod.org>
+ *   Copyright (C) 2018-2019  Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 int usage(char *program) {
 
-	fprintf(stderr, "Usage: %s <inputfile> [ <outputfile ]\n", program);
+	fprintf(stderr, "Usage: %s <inputfile> [ <outputfile> ]\n", program);
 	return -1;
 }
 
