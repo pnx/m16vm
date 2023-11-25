@@ -1,4 +1,5 @@
 *.o
 *.a
+*.bin
 m16vm
 m16as
