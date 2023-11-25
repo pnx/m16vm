@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 	parse(fd_in, fd_out);
 
 	fclose(fd_in);
-	fclose(fd_out);
+	if (fd_out != stdout)
+		fclose(fd_out);
 	return 0;
 }
