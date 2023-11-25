@@ -20,14 +20,20 @@
 #include <stdio.h>
 #include "cpu.h"
 #include "debug.h"
+#include "mm.h"
 
 void debug_print_memory(uint8_t *mm) {
 
 	int i = 0;
 
-	printf("\n");
+	printf("\n"
+		"    00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\n"
+		"   ------------------------------------------------");
 
-	for(i = 0; i < 32; i++) {
+	for(i = 0; i < MEM_SIZE; i++) {
+		if ((i % 16) == 0)
+			printf("\n%.2X| ", i);
+
 		printf("%.2X ", mm[i]);
 	}
 	printf("\n");
