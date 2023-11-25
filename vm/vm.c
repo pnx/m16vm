@@ -50,15 +50,19 @@ void run(struct program *prog) {
 	mm_exit();
 }
 
+int usage(const char* name) {
+	fprintf(stderr, "usage: %s [ --dmem | --dreg ] <file>\n", name);
+	return 1;
+}
+
 int main(int argc, char **argv) {
 
 	struct program prog = { 0 };
-	const char *filename;
+	const char *filename = NULL;
 	int i;
 
 	if (argc < 2) {
-		fprintf(stderr, "usage: %s [ --dmem | --dreg ] <file>\n", argv[0]);
-		return 1;
+		return usage(argv[0]);
 	}
 
 	// Parse options.
@@ -76,6 +80,10 @@ int main(int argc, char **argv) {
 			filename = argv[i];
 			break;
 		}
+	}
+
+	if (filename == NULL) {
+		return usage(argv[0]);
 	}
 
 	if (program_loadfromfile(&prog, filename) < 0)

@@ -1,6 +1,6 @@
 /* vector.c
  *
- *   Copyright (C) 2018   Henrik Hautakoski <henrik@fiktivkod.org>
+ *   Copyright (C) 2012,2014-2015,2018-2019,2023   Henrik Hautakoski <henrik.hautakoski@gmail.com>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
