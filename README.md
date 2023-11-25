@@ -7,6 +7,50 @@ The design is taken from the real world and tries to mimic existing RISC-archite
 
 The instruction set is by no means designed to be "fast" or "optimal" but focus more on being easy to understand and modify/play with.
 
+Compile
+-------
+
+The code is compiled via Makefile.
+
+```sh
+$ make
+```
+
+The code is compiled into 2 programs:
+
+* `m16as` - Assembler - Compiles assembler code into binary form.
+* `m16vm` - Virtual Machine, will run binary code from a file.
+
+
+Example for first compile assembly code and then run it:
+
+```sh
+$ ./m16as examples/asm/hello_world.as > prog.bin
+$ ./m16vm ./prog.bin
+HELLO WORLD
+```
+
+Usage
+-----
+
+#### m16as
+
+```
+Usage: ./m16as <inputfile> [ <outputfile> ]
+```
+
+`m16as` is pretty streigth forward. if no `outputfile` is given, the output is written to `stdout`
+
+#### m16vm
+
+```
+usage: ./m16vm [ --dmem | --dreg ] <file>
+```
+
+* `--dmem` - debug memory, after the program has executed the last instruction, the contents of the memory is printed to `stdout`. NOTE: only the first 32 bytes are printed to
+
+* `--dreg` - debug registers, after the program has executed the last instruction, the contents of the registers is printed to `stdout`.
+
 Specification
 -------------
 
