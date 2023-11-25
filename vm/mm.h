@@ -22,6 +22,11 @@
 
 #include <stdint.h>
 
+#ifndef MEM_SIZE
+/* Set a default memory size. (2^8) */
+#define MEM_SIZE 256
+#endif
+
 extern uint8_t *mm_base_addr;
 
 void mm_init();

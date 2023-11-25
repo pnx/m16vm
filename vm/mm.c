@@ -21,11 +21,6 @@
 #include <stdlib.h>
 #include "mm.h"
 
-#ifndef MEM_SIZE
-/* Set a default memory size. (2^8) */
-#define MEM_SIZE 256
-#endif
-
 // Get a WORD aligned (16-bit) address.
 // Casts the 8-bit pointer (mm_base_addr) to 16-bit (WORD) and add offset.
 #define addr_align_word(offset) \
